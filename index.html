@@ -92,13 +92,15 @@
 				'쌀국수',
 				'대박돈까스',
 				'히또시',
-				'설렁탕',
-				'닭갈비볶음밥',
+				'국풍설렁탕',
+				'춘천닭갈비',
 				'백억반점',
 				'도짬뽕',
 				'김치두루치기',
-				'김치찌개',
-				'칼국수'
+				'양푼이김치찌개',
+				'통돼지김치찌개',
+				'박가네칼국수',
+				'시카고부대찌개'
 			];
 			let colors = [];
 
@@ -124,7 +126,7 @@
 			  }
 
 			  ctx.fillStyle = "white";
-  			ctx.lineWidth = 0.5;
+				ctx.lineWidth = 0.5;
 			  ctx.font = "20px Pretendard";
 			  ctx.textAlign = "center";
 
@@ -134,8 +136,8 @@
 			    ctx.save();
 
 			    ctx.translate(
-			      cw + Math.cos(angle) * (cw - 50),
-			      ch + Math.sin(angle) * (ch - 50)
+			      cw + Math.cos(angle) * (cw - 30),
+			      ch + Math.sin(angle) * (ch - 30)
 			    );
 
 			    ctx.rotate(angle + Math.PI / 2);
