@@ -1,0 +1,208 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="./pretendard.css">
+		<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+		<style>
+
+			* {
+			  font-family: Pretendard;
+			}
+
+			body {
+			  background: #f7f8fc;
+			  height : 960px;
+			}
+
+			canvas {
+			  margin-top : 100px;  
+			  transition: 20s;
+			}
+
+			button {
+			  z-index : 1000;
+			  background: #febf00;
+			  margin-top: 1rem;
+			  padding: .5rem 1.5rem;
+			  border: none;
+			  font-size: 1rem;
+			  font-weight: bold;
+			  border-radius: 5px;
+			  transition: .2s;
+			  cursor: pointer;
+			}
+
+			button:active {
+			  background: #444;
+			  color: #f9f9f9;
+			}
+			 
+			#menu {
+			  width: 100%;
+			  height : 960px;
+			  overflow: hidden;
+			  display: flex;
+			  align-items: center;
+			  text-align : center;
+			  flex-direction: column;
+			  position: relative;
+			}
+
+			#menu::before {
+			  margin-top : 100px; 
+			  content: "";
+			  position: absolute;
+			  width: 10px;
+			  height: 50px;
+			  border-radius: 5px;
+			  background: #000;
+			  top: -20px;
+			  left: 50%;
+			  transform: translateX(-50%);
+			  z-index: 22;
+			}
+
+			input {
+				height: 40px;
+			  font-size: 1rem;
+			  font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="menu">
+			<canvas width="450px" height="450px"></canvas>  
+			<button onclick="rotate()">돌려돌려 돌림판</button>
+			<div style="margin-top: 20px;">
+				<input type="text" id="selectedMenu" disabled="true" style="text-align: center;">
+			</div>
+			<div id="addDiv">
+			  <input type="text" id="menuAdd">
+			  <button onclick="add()">메뉴 추가</button>
+			</div>
+		</div>
+
+		<script>
+			const $c = document.querySelector("canvas");
+			const ctx = $c.getContext(`2d`);
+			const menuAdd = document.querySelector('#menuAdd');
+			const product = [
+				'애플김밥',
+				'쌀국수',
+				'대박돈까스',
+				'히또시',
+				'설렁탕',
+				'닭갈비볶음밥',
+				'백억반점',
+				'도짬뽕',
+				'김치두루치기',
+				'김치찌개',
+				'칼국수'
+			];
+			let colors = [];
+
+			const newMake = () => {
+			  const [cw, ch] = [$c.width / 2, $c.height / 2];
+			  const arc = Math.PI / (product.length / 2);
+
+		    colors = [];
+	      for(var l=0; l<product.length; l++){
+	        let r = Math.floor(Math.random() * 256);
+	        let g = Math.floor(Math.random() * 256);
+	        let b = Math.floor(Math.random() * 256);
+	        colors.push("rgb(" + r + "," + g + "," + b + ")");
+	      }
+
+			  for (let i = 0; i < product.length; i++) {
+			    ctx.beginPath();
+			    ctx.fillStyle = colors[i];
+			    ctx.moveTo(cw, ch);
+			    ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+			    ctx.fill();
+			    ctx.closePath();
+			  }
+
+			  ctx.fillStyle = "white";
+  			ctx.lineWidth = 0.5;
+			  ctx.font = "20px Pretendard";
+			  ctx.textAlign = "center";
+
+			  for (let i = -1; i < product.length-1; i++) {
+			    const angle = (arc * i) + (arc / 2);
+
+			    ctx.save();
+
+			    ctx.translate(
+			      cw + Math.cos(angle) * (cw - 50),
+			      ch + Math.sin(angle) * (ch - 50)
+			    );
+
+			    ctx.rotate(angle + Math.PI / 2);
+
+			    product[i+1].split(" ").forEach((text, j) => {
+			      let y = 0;
+			      for (let i = 0; i < text.length; i++) {
+					    ctx.fillText(text[i], 0, y);
+					    y += 23; // 한 글자씩 아래로 내림
+					  }
+			    });
+
+			    ctx.restore();
+			  }
+			}
+
+			const rotate = () => {
+			  $c.style.transform = `initial`;
+			  $c.style.transition = `initial`;
+			  const alpha = Math.floor(Math.random()*100);
+
+			  setTimeout(() => {
+			    const ran = Math.floor(Math.random() * product.length);
+			    const arc = 360 / product.length;
+			    const rotate = (ran * arc) + 3600 + (arc * 3) - (arc/4) + alpha;
+			    $c.style.transform = `rotate(-${rotate}deg)`;
+			    $c.style.transition = `0.5s`;
+
+			    setTimeout(() => {
+			    	const xy = getOriginalCoordinates(ctx, $c.width/2, $c.height/4, rotate);
+			    	const pixel = ctx.getImageData(xy.x, xy.y, 1, 1).data;
+			    	const [r, g, b, a] = pixel;
+			    	const idx = colors.indexOf("rgb(" + r + "," + g + "," + b + ")");
+
+			    	document.getElementById("selectedMenu").value = product[idx];
+			    }, 500);
+
+			  }, 1);
+			};
+
+			function getOriginalCoordinates(ctx, rotatedX, rotatedY, rotateAngle) {
+			    const centerX = $c.width / 2;
+			    const centerY = $c.height / 2;
+			    const angle = (rotateAngle * Math.PI) / 180;
+
+			    const originalX = Math.cos(angle) * (rotatedX - centerX) - Math.sin(angle) * (rotatedY - centerY) + centerX;
+			    const originalY = Math.sin(angle) * (rotatedX - centerX) + Math.cos(angle) * (rotatedY - centerY) + centerY;
+
+			    return { x: originalX, y: originalY };
+			}
+
+			function add(){
+			  if(menuAdd.value != undefined && menuAdd.value != ""){
+			    product.push(menuAdd.value);
+			    // let r = Math.floor(Math.random() * 256);
+			    // let g = Math.floor(Math.random() * 256);
+			    // let b = Math.floor(Math.random() * 256);
+			    newMake();
+			    menuAdd.value="";
+			  }
+			  else{
+			    alert("메뉴를 입력한 후 버튼을 클릭 해 주세요");
+			  }
+			}
+
+			newMake();
+
+		</script>
+	</body>
+</html>
