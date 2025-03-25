@@ -80,6 +80,31 @@
 			<div style="margin-top: 20px;">
 				메뉴추가는 오대리한테💬
 			</div>
+			<div style="margin-top: 20px; width: 100%;">
+				<div style="width: 50%; float: left; font-weight: bold;">중앙역</div>
+				<div style="width: 50%; float: right;font-weight: bold;">한대앞역</div>
+			</div>
+			<div style="margin-top: 5px; width: 100%; text-align: left;">
+				<div style="width: 50%; float: left; padding-left: 20px; box-sizing: border-box;">
+					1. 애플김밥<br/>
+					2. 쌀국수<br/>
+					3. 대박돈까스<br/>
+					4. 히또시<br/>
+					5. 백억반점<br/>
+					6. 도짬뽕<br/>
+					7. 김치두루치기<br/>
+					8. 양푼이김치찌개<br/>
+					9. 시카고부대찌개<br/>
+					10. 박가네칼국수<br/>
+				</div>
+				<div style="width: 50%; float: right; padding-left: 20px; box-sizing: border-box;">
+					1. 국풍설렁탕<br/>
+					2. 춘천닭갈비<br/>
+					3. 통돼지김치찌개<br/>
+					4. 조선감자탕<br/>
+					5. 마늘통닭손칼국수<br/>
+				</div>
+			</div>
 			<!-- <div id="addDiv">
 				<input type="text" id="menuAdd">
 				<button onclick="add()">메뉴 추가</button>
@@ -168,7 +193,7 @@
 				setTimeout(() => {
 					const ran = Math.floor(Math.random() * product.length); // 선택된 인덱스
 					const arc = 360 / product.length;
-					const fullRotations = 10; // 10바퀴
+					const fullRotations = 3; // 3바퀴
 					const rotate = (fullRotations * 360) + (ran * arc) + (arc / 2); // 가운데 맞추기
 
 					$c.style.transform = `rotate(-${rotate}deg)`;
